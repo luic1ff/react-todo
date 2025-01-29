@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiTrash2, FiCheckCircle, FiCircle, FiPlus, FiSun, FiMoon } from 'react-icons/fi';
+import { FiTrash2, FiCheckCircle, FiCircle, FiSun, FiMoon, FiArrowRight } from 'react-icons/fi';
 
 type Todo = {
     id: number;
@@ -17,7 +17,6 @@ const TodoList = () => {
     const [currentFilter, setCurrentFilter] = useState<Filter>('all');
     const [theme, setTheme] = useState<Theme>('light');
 
-    // Загрузка из localStorage
     useEffect(() => {
         const savedTodos = localStorage.getItem('todos');
         if (savedTodos) setTodos(JSON.parse(savedTodos) as Todo[]);
@@ -27,7 +26,6 @@ const TodoList = () => {
         document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     }, []);
 
-    // Сохранение в localStorage
     useEffect(() => {
         localStorage.setItem('todos', JSON.stringify(todos));
         localStorage.setItem('theme', theme);
@@ -68,43 +66,44 @@ const TodoList = () => {
     });
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-            <div className="max-w-4xl mx-auto p-4 md:p-8 lg:p-12">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 lg:p-8 transition-all duration-300">
+        <div className="min-h-screen bg-gradient-to-br from-zinc-100 to-gray-200 dark:from-[#0a0a0a] dark:to-[#1a1a1a] transition-all duration-500">
+            <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
+                <div className="bg-white/80 dark:bg-[#161616]/90 backdrop-blur-lg rounded-2xl shadow-2xl p-6 lg:p-8 transition-all duration-500 border border-white/20 dark:border-[#ffffff10]">
                     {/* Header Section */}
                     <div className="flex justify-between items-center mb-8">
-                        <h1 className="text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white">
-                            Todo List
+                        <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                            TaskFlow
                         </h1>
                         <button
                             onClick={toggleTheme}
-                            className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                            className="p-3 rounded-xl bg-white/50 dark:bg-[#212124]/50 hover:bg-white/80 dark:hover:bg-[#212124]/80 transition-all duration-300 shadow-lg hover:shadow-xl border border-white/20 dark:border-[#ffffff10]"
                         >
                             {theme === 'light' ? (
-                                <FiMoon size={24} className="text-gray-800 dark:text-gray-200"/>
+                                <FiMoon size={24} className="text-zinc-800 dark:text-amber-400"/>
                             ) : (
-                                <FiSun size={24} className="text-gray-800 dark:text-gray-200"/>
+                                <FiSun size={24} className="text-zinc-800 dark:text-amber-400"/>
                             )}
                         </button>
                     </div>
 
                     {/* Input Section */}
-                    <div className="flex gap-3 mb-8">
-                        <input
-                            type="text"
-                            value={inputText}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputText(e.target.value)}
-                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && addTodo()}
-                            placeholder="Add a new task..."
-                            className="flex-1 p-3 lg:p-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                        />
-                        <button
-                            onClick={addTodo}
-                            className="bg-blue-500 hover:bg-blue-600 text-white p-3 lg:p-4 rounded-xl transition-colors flex items-center gap-2"
-                        >
-                            <FiPlus size={20} />
-                            <span className="hidden lg:inline">Add Task</span>
-                        </button>
+                    <div className="flex flex-col gap-4 mb-8">
+                        <div className="relative group">
+                            <input
+                                type="text"
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && addTodo()}
+                                placeholder="What's next?"
+                                className="w-full bg-white/80 dark:bg-[#212124]/80 dark:text-white px-6 py-4 rounded-xl shadow-xl border-2 border-transparent focus:border-amber-500 focus:dark:border-amber-400 outline-none transition-all duration-300 text-lg placeholder-zinc-400 dark:placeholder-zinc-600"
+                            />
+                            <button
+                                onClick={addTodo}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-amber-500 hover:bg-amber-600 rounded-lg transition-all duration-300 shadow hover:shadow-md"
+                            >
+                                <FiArrowRight size={24} className="text-white"/>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Filters */}
@@ -113,10 +112,10 @@ const TodoList = () => {
                             <button
                                 key={filter}
                                 onClick={() => setCurrentFilter(filter)}
-                                className={`px-4 py-2 rounded-lg capitalize text-sm lg:text-base ${
+                                className={`px-4 py-2 rounded-xl capitalize font-medium transition-all duration-300 ${
                                     currentFilter === filter
-                                        ? 'bg-blue-500 text-white'
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                                        ? 'bg-amber-500/90 text-white shadow-inner'
+                                        : 'bg-white/50 dark:bg-[#212124]/50 text-zinc-600 dark:text-zinc-400 hover:bg-white/80 dark:hover:bg-[#212124]/80 shadow hover:shadow-md'
                                 }`}
                             >
                                 {filter}
@@ -129,32 +128,36 @@ const TodoList = () => {
                         {filteredTodos.map(todo => (
                             <div
                                 key={todo.id}
-                                className="flex items-center justify-between p-4 lg:p-5 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                                className="group flex items-center justify-between p-4 bg-white/50 dark:bg-[#212124]/50 backdrop-blur-sm rounded-xl hover:bg-white/80 dark:hover:bg-[#212124]/80 transition-all duration-300 shadow hover:shadow-md border border-white/20 dark:border-[#ffffff10]"
                             >
                                 <div className="flex items-center gap-3 flex-1 min-w-0">
                                     <button
                                         onClick={() => toggleComplete(todo.id)}
-                                        className="flex-shrink-0 text-gray-400 hover:text-green-500 dark:hover:text-green-400 transition-colors"
+                                        className={`flex-shrink-0 transition-all duration-300 ${
+                                            todo.completed
+                                                ? 'text-amber-500 dark:text-amber-400'
+                                                : 'text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400'
+                                        }`}
                                     >
                                         {todo.completed ? (
-                                            <FiCheckCircle size={24} className="text-green-500 dark:text-green-400" />
+                                            <FiCheckCircle size={28} className="animate-pop-in"/>
                                         ) : (
-                                            <FiCircle size={24} />
+                                            <FiCircle size={28}/>
                                         )}
                                     </button>
                                     <span
-                                        className={`text-base lg:text-lg truncate ${
+                                        className={`text-lg truncate transition-all duration-300 ${
                                             todo.completed
-                                                ? 'text-gray-400 dark:text-gray-500 line-through'
-                                                : 'text-gray-700 dark:text-gray-200'
+                                                ? 'text-zinc-400 dark:text-zinc-600 line-through'
+                                                : 'text-zinc-700 dark:text-zinc-200'
                                         }`}
                                     >
-                    {todo.text}
-                  </span>
+                                        {todo.text}
+                                    </span>
                                 </div>
                                 <button
                                     onClick={() => deleteTodo(todo.id)}
-                                    className="flex-shrink-0 text-red-400 hover:text-red-600 dark:hover:text-red-500 transition-colors ml-2"
+                                    className="flex-shrink-0 text-zinc-400 hover:text-red-500 dark:hover:text-red-400 transition-colors ml-2 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
                                 >
                                     <FiTrash2 size={20} />
                                 </button>
@@ -162,8 +165,13 @@ const TodoList = () => {
                         ))}
 
                         {!filteredTodos.length && (
-                            <div className="text-center text-gray-400 dark:text-gray-500 py-6 text-lg">
-                                No tasks found {currentFilter !== 'all' && `in ${currentFilter}`}
+                            <div className="text-center py-6">
+                                <div className="text-zinc-400 dark:text-zinc-600 text-lg mb-2">
+                                    ✨ Nothing here, add your first task!
+                                </div>
+                                <div className="text-sm text-zinc-400 dark:text-zinc-600">
+                                    {currentFilter !== 'all' && `No ${currentFilter} tasks found`}
+                                </div>
                             </div>
                         )}
                     </div>
